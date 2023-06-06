@@ -1,0 +1,141 @@
+enable
+configure terminal
+hostname R1-LR
+
+interface Fa0/0
+ip address 200.200.84.129 255.255.255.252
+ipv6 address 2001:0db8:acad:54FF::1:1/112
+description WAN1
+no shutdown
+
+
+interface Fa0/1
+ip address 200.200.84.62 255.255.255.192
+ipv6 address 2001:db8:acad:5400::62/64
+ipv6 address FE80::1 link-local
+description LAN0
+no shutdown
+
+exit 
+
+ip route 200.200.84.64 255.255.255.224 200.200.84.130
+ipv6 route 2001:0db8:acad:5401::/64 2001:0db8:acad:54FF::1:2
+ipv6 unicast-routing 
+
+end
+write
+--------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------
+enable
+configure terminal
+hostname R2-LR
+
+interface Fa0/0
+ip address 200.200.84.130 255.255.255.252
+no shutdown
+ipv6 address 2001:0db8:acad:54FF::1:2/112
+description WAN1
+
+interface Fa0/1
+ip address 200.200.84.94 255.255.255.224
+no shutdown
+ipv6 address 2001:db8:acad:5401::94/64
+ipv6 address FE80::1 link-local
+description LAN1
+
+exit 
+
+ip route 200.200.84.0 255.255.255.192 200.200.84.129
+ipv6 route 2001:0db8:acad:5400::/64 2001:0db8:acad:54FF::1:1
+ipv6 unicast-routing 
+
+end
+write
+--------------------------
+        SWITCH 1:
+--------------------------
+enable
+configure terminal
+hostname S1-LR
+interface vlan 1
+
+ip address 200.200.84.61 255.255.255.192
+no shutdown
+ip default-gateway 200.200.84.62
+end
+write
+
+--------------------------
+        SWITCH 2:
+--------------------------
+enable
+configure terminal
+hostname S2-LR
+interface vlan 1
+
+ip address 200.200.84.93 255.255.255.224
+no shutdown
+ip default-gateway 200.200.84.94
+end
+write
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
+Para Switches:
+--------------------------------------
+clear
+enable
+configure terminal
+hostname S1-LR
+interface vlan 1
+
+ip address 200.200.84.61 255.255.255.192
+ip default-gateway 200.200.84.62
+no shutdown
+end
+write
+--------------------------------------
+
+Ver configurações:
+```
+show running-config
+```
+
+"Translating `command`... domain server...
+Para parar: Ctrl+shift+6
+para testar, abrir o console de um PC e fazer ping + endereço de cada um
+se der 4 time outs (100% de perda), nao ta funfando
+
+
+fazer ping para todos os ipv4s e ipv6s
+
+
+o ipv6 nos roteadores da cisco é desativado (por isso vai dar time out). Para isso, é
+necessário ativá-lo manualmente com o comando:
+
+
+
+Vá pelo CLI no roteador e digite:
+```
+enable
+configure terminal
+ipv6 unicast-routing
+```
+
+
+-----PARA ROTEAMENTO:
+na configucracao global
+
+ip route ipv4, mascara e nextHop
+
+ip route 200.200.84.64 255.255.255.224 200.200.84.130

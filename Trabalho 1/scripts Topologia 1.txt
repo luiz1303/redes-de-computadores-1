@@ -1,0 +1,70 @@
+--------------------------
+        ROTEADOR 1
+--------------------------
+enable
+configure terminal
+hostname R1-LR
+
+interface Fa0/0
+ip address 200.200.84.129 255.255.255.252
+ipv6 address 2001:0db8:acad:54FF::1:1/112
+description WAN1
+no shutdown
+
+
+interface Fa0/1
+ip address 200.200.84.62 255.255.255.192
+ipv6 address 2001:db8:acad:5400::62/64
+ipv6 address FE80::1 link-local
+description LAN0
+no shutdown
+
+exit 
+
+ip route 200.200.84.64 255.255.255.224 200.200.84.130
+ipv6 route 2001:0db8:acad:5401::/64 2001:0db8:acad:54FF::1:2
+ipv6 unicast-routing 
+
+end
+write
+
+--------------------------
+        SWITCH 1:
+--------------------------
+enable
+configure terminal
+hostname S1-LR
+interface vlan 1
+
+ip address 200.200.84.61 255.255.255.192
+no shutdown
+ip default-gateway 200.200.84.62
+description LAN0
+end
+write
+
+--------------------------
+        SWITCH 2:
+--------------------------
+enable
+configure terminal
+hostname S2-LR
+interface vlan 1
+
+ip address 200.200.84.93 255.255.255.224
+no shutdown
+ip default-gateway 200.200.84.94
+description LAN1
+end
+write
+
+
+
+
+
+
+
+
+
+
+
