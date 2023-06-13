@@ -1,0 +1,72 @@
+enable
+conf t
+hostname r-ita-lrbl
+ipv6 unicast-routing
+
+interface fa0/1
+description cv-ita
+ip address 200.134.84.241 255.255.255.252
+ipv6 address 2001:DB8:CAFE:54FF::4:1/112
+ipv6 enable
+no shutdown
+exit
+
+interface Se0/0/0
+description ita-pb
+clock rate 56000
+ip address 200.134.84.237 255.255.255.252
+ipv6 address 2001:DB8:CAFE:54FF::3:1/112
+ipv6 enable
+no shutdown
+exit
+
+interface Se0/0/1
+description fb-ita
+ip address 200.134.84.234 255.255.255.252
+ipv6 address 2001:DB8:CAFE:54FF::2:2/112
+ipv6 enable
+no shutdown
+exit
+
+ip route 200.134.84.0 255.255.255.192 200.134.84.238
+ip route 200.134.84.64 255.255.255.224 200.134.84.238
+ip route 200.134.84.96 255.255.255.224 200.134.84.242
+ip route 200.134.84.224 255.255.255.252 200.134.84.238
+ip route 200.134.84.228 255.255.255.252 200.134.84.238
+
+ipv6 route 2001:DB8:CAFE:5400::/64 2001:DB8:CAFE:54FF::3:2
+ipv6 route 2001:DB8:CAFE:5401::/64 2001:DB8:CAFE:54FF::3:2
+ipv6 route 2001:DB8:CAFE:5402::/64 2001:DB8:CAFE:54FF::4:2
+ipv6 route 2001:DB8:CAFE:54FF::0:0/112 2001:DB8:CAFE:54FF::3:2
+ipv6 route 2001:DB8:CAFE:54FF::1:0/112 2001:DB8:CAFE:54FF::3:2
+
+security passwords min-length 10
+login block-for 120 attempts 3 within 60
+line vty 0 15
+exec-timeout 5
+login local
+transport input ssh 
+exit
+service password-encryption
+line con 0
+exec-timeout 5
+password @Cons-luiz
+login
+exit
+enable secret @dmin-luiz
+banner motd $
+--------------------------------------------------------------------------
+|                                                                        |
+|                       Roteador Itapejara D'Oeste                       |
+|                                                                        |
+|               ATENÇÃO Acesso Restrito a pessoas autorizadas!           |
+|                                                                        |
+|   Administrador: LUIZ RICARDO BRUMATI DE LIMA (luiz.1303@hotmail.com)  |
+|                                                                        |
+-------------------------------------------------------------------------- $
+
+ip domain name luiz.brumati.com.br
+crypto key generate rsa general-keys modulus 1024
+username luiz secret ssh@Network1ng
+exit
+w

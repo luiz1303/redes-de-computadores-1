@@ -1,0 +1,11 @@
+enable
+conf t
+hostname sw-filial1-lrbl
+ip default-gateway 200.134.84.65
+interface vlan1
+description Filial1
+ip address 200.134.84.66 255.255.255.224
+no shutdown
+exit
+exit
+w
